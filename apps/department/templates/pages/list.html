@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Departamentos - ProCRM{% endblock %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    {% include 'includes/sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 relative overflow-y-auto focus:outline-none">
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                    <!-- Header -->
+                    <div class="md:flex md:items-center md:justify-between mb-6">
+                        <div class="flex-1 min-w-0">
+                            <h1 class="text-2xl font-semibold text-gray-900">
+                                Departamentos
+                            </h1>
+                        </div>
+                        <div class="mt-4 flex md:mt-0 md:ml-4">
+                            <a href="{% url 'department:create' %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+                                Novo Departamento
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Grid -->
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {% for department in departments %}
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-1">
+                                        <h3 class="text-lg font-medium text-gray-900">{{ department.name }}</h3>
+                                        {% if department.description %}
+                                        <p class="mt-1 text-sm text-gray-500">{{ department.description }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ml-4 flex-shrink-0">
+                                        <div class="relative inline-block text-left">
+                                            <div>
+                                                <button type="button" class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800" id="menu-button-{{ department.id }}" aria-expanded="false" aria-haspopup="true" onclick="toggleMenu('{{ department.id }}')">
+                                                    <span class="sr-only">Abrir menu</span>
+                                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button-{{ department.id }}" tabindex="-1" id="menu-{{ department.id }}">
+                                                <div class="py-1" role="none">
+                                                    <a href="{% url 'department:edit' department.id %}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">Editar</a>
+                                                    <button onclick="confirmDelete('{{ department.id }}')" class="text-red-600 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">Excluir</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-span-full">
+                            <div class="text-center py-12">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhum departamento</h3>
+                                <p class="mt-1 text-sm text-gray-500">Comece criando um novo departamento.</p>
+                                <div class="mt-6">
+                                    <a href="{% url 'department:create' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+                                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                        </svg>
+                                        Novo Departamento
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal de confirmação de exclusão -->
+<div id="delete-modal" class="hidden fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div class="sm:flex sm:items-start">
+                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                        Excluir departamento
+                    </h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">
+                            Tem certeza que deseja excluir este departamento? Esta ação não pode ser desfeita.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                <form id="delete-form" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Excluir
+                    </button>
+                </form>
+                <button type="button" onclick="closeDeleteModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800 sm:mt-0 sm:w-auto sm:text-sm">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleMenu(id) {
+        const menu = document.getElementById(`menu-${id}`);
+        menu.classList.toggle('hidden');
+    }
+
+    function confirmDelete(id) {
+        const modal = document.getElementById('delete-modal');
+        const form = document.getElementById('delete-form');
+        form.action = `/department/${id}/delete/`;
+        modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('delete-modal');
+        modal.classList.add('hidden');
+    }
+
+    // Fechar o menu quando clicar fora
+    document.addEventListener('click', function(event) {
+        const menus = document.querySelectorAll('[id^="menu-"]');
+        menus.forEach(menu => {
+            if (!menu.contains(event.target) && !event.target.closest('[id^="menu-button-"]')) {
+                menu.classList.add('hidden');
+            }
+        });
+    });
+</script>
+{% endblock %} 

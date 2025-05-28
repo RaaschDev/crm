@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if employer %}Editar{% else %}Novo{% endif %} Funcionário - ProCRM{% endblock %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    {% include 'includes/sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 relative overflow-y-auto focus:outline-none">
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                    <!-- Header -->
+                    <div class="md:flex md:items-center md:justify-between mb-6">
+                        <div class="flex-1 min-w-0">
+                            <h1 class="text-2xl font-semibold text-gray-900">
+                                {% if employer %}Editar{% else %}Novo{% endif %} Funcionário
+                            </h1>
+                        </div>
+                        <div class="mt-4 flex md:mt-0 md:ml-4">
+                            <a href="{% url 'employers:list' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+                                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                                </svg>
+                                Voltar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <form method="POST" class="space-y-6">
+                                {% csrf_token %}
+                                
+                                {% if form.non_field_errors %}
+                                <div class="rounded-md bg-red-50 p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-sm font-medium text-red-800">
+                                                Erro ao salvar funcionário
+                                            </h3>
+                                            <div class="mt-2 text-sm text-red-700">
+                                                <ul class="list-disc pl-5 space-y-1">
+                                                    {% for error in form.non_field_errors %}
+                                                    <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                    <div class="sm:col-span-3">
+                                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.name.label }}</label>
+                                        <div class="mt-1">
+                                            {{ form.name }}
+                                            {% if form.name.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.email.label }}</label>
+                                        <div class="mt-1">
+                                            {{ form.email }}
+                                            {% if form.email.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.email.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.phone.label }}</label>
+                                        <div class="mt-1">
+                                            {{ form.phone }}
+                                            {% if form.phone.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.phone.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="{{ form.position.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.position.label }}</label>
+                                        <div class="mt-1">
+                                            {{ form.position }}
+                                            {% if form.position.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.position.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="{{ form.department.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.department.label }}</label>
+                                        <div class="mt-1">
+                                            {{ form.department }}
+                                            {% if form.department.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.department.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="{{ form.user.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.user.label }}</label>
+                                        <div class="mt-1">
+                                            {{ form.user }}
+                                            {% if form.user.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.user.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-6">
+                                        <div class="flex items-center">
+                                            {{ form.is_active }}
+                                            <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm text-gray-900">
+                                                {{ form.is_active.label }}
+                                            </label>
+                                            {% if form.is_active.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.is_active.errors.0 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-5">
+                                    <div class="flex justify-end">
+                                        <a href="{% url 'employers:list' %}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+                                            Cancelar
+                                        </a>
+                                        <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+                                            Salvar
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %} 

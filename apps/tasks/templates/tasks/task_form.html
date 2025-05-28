@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Editar Tarefa{% else %}Nova Tarefa{% endif %} - ProCRM{% endblock %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    {% include 'includes/sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 relative overflow-y-auto focus:outline-none">
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                    <!-- Header -->
+                    <div class="md:flex md:items-center md:justify-between mb-6">
+                        <div class="flex-1 min-w-0">
+                            <h1 class="text-2xl font-semibold text-gray-900">
+                                {% if object %}Editar Tarefa{% else %}Nova Tarefa{% endif %}
+                            </h1>
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <form method="post" class="space-y-6">
+                                {% csrf_token %}
+                                
+                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                                    <div>
+                                        <label for="{{ form.department.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                            Departamento
+                                        </label>
+                                        <div class="mt-1">
+                                            {{ form.department }}
+                                        </div>
+                                        {% if form.department.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.department.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                        Título
+                                    </label>
+                                    <div class="mt-1">
+                                        {{ form.title }}
+                                    </div>
+                                    {% if form.title.errors %}
+                                        <p class="mt-2 text-sm text-red-600">{{ form.title.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                        Descrição
+                                    </label>
+                                    <div class="mt-1">
+                                        {{ form.description }}
+                                    </div>
+                                    {% if form.description.errors %}
+                                        <p class="mt-2 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                                    <div>
+                                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                            Status
+                                        </label>
+                                        <div class="mt-1">
+                                            {{ form.status }}
+                                        </div>
+                                        {% if form.status.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.status.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+
+                                    <div>
+                                        <label for="{{ form.priority.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                            Prioridade
+                                        </label>
+                                        <div class="mt-1">
+                                            {{ form.priority }}
+                                        </div>
+                                        {% if form.priority.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.priority.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                                    <div>
+                                        <label for="{{ form.due_date.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                            Data de Entrega
+                                        </label>
+                                        <div class="mt-1">
+                                            {{ form.due_date }}
+                                        </div>
+                                        {% if form.due_date.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.due_date.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+
+                                    <div>
+                                        <label for="{{ form.assigned_to.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                            Atribuir para
+                                        </label>
+                                        <div class="mt-1">
+                                            {{ form.assigned_to }}
+                                        </div>
+                                        {% if form.assigned_to.errors %}
+                                            <p class="mt-2 text-sm text-red-600">{{ form.assigned_to.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-end space-x-3">
+                                    <a href="{% url 'tasks:kanban' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Cancelar
+                                    </a>
+                                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        {% if object %}Salvar{% else %}Criar{% endif %}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %} 
