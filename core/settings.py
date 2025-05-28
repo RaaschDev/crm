@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+import os
+
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -141,4 +146,4 @@ LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL = 'login'
 
 # OpenAI API Key
-OPENAI_API_KEY = load_dotenv("OPENAI_API_KEY")  # Substitua pela sua chave API do OpenAI
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

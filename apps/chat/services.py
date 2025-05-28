@@ -1,4 +1,4 @@
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferMemory
@@ -7,13 +7,14 @@ from apps.clients.models import Client
 from apps.employers.models import Employer
 from apps.tasks.models import Task
 from apps.department.models import Department
+import os
 
 class ChatService:
     def __init__(self):
         self.llm = ChatOpenAI(
             temperature=0.7,
             model_name="gpt-3.5-turbo",
-            openai_api_key=settings.OPENAI_API_KEY
+            api_key=settings.OPENAI_API_KEY
         )
         self.memory = ConversationBufferMemory(memory_key="chat_history")
         
