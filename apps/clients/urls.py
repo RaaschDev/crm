@@ -14,4 +14,6 @@ urlpatterns = [
     path('tags/create/', views.tag_create, name='tag_create'),
     path('tags/<int:pk>/edit/', views.tag_edit, name='tag_edit'),
     path('tags/<int:pk>/delete/', views.tag_delete, name='tag_delete'),
+    # Search URLs
+    path('search/by-tags/', views.search_clients_by_tags, name='search_by_tags'),
 ]

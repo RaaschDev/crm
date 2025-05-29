@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from apps.clients.models import Client
+from apps.suppliers.models import Supplier
+from apps.tasks.models import Task
+from apps.billings.models import BillingPayable, BillingReceivable
+from django.db.models import Sum
 
 @login_required
 def home(request):
@@ -10,13 +14,35 @@ def home(request):
     # Get the user's enterprise
     enterprise = request.user.enterprise
     
-    # Count clients for the enterprise
-    total_clientes = Client.objects.filter(enterprise=enterprise).count()
+    # Clientes
+    total_clients = Client.objects.filter(enterprise=enterprise, is_active=True).count()
+    
+    # Fornecedores
+    total_suppliers = Supplier.objects.filter(enterprise=enterprise, is_active=True).count()
+    
+    # Tarefas
+    total_tasks = Task.objects.filter(enterprise=enterprise).count()
+    pending_tasks = Task.objects.filter(enterprise=enterprise, status='pending').count()
+    
+    # Contas a Pagar
+    total_payable = BillingPayable.objects.filter(
+        enterprise=enterprise,
+        status='pending'
+    ).aggregate(total=Sum('total_value'))['total'] or 0
+    
+    # Contas a Receber
+    total_receivable = BillingReceivable.objects.filter(
+        enterprise=enterprise,
+        status='pending'
+    ).aggregate(total=Sum('total_value'))['total'] or 0
     
     context = {
-        'total_clientes': total_clientes,
-        'tarefas_pendentes': 0,  # TODO: Implement actual count
-        'projetos_ativos': 0,  # TODO: Implement actual count
+        'total_clients': total_clients,
+        'total_suppliers': total_suppliers,
+        'total_tasks': total_tasks,
+        'pending_tasks': pending_tasks,
+        'total_payable': total_payable,
+        'total_receivable': total_receivable,
     }
     return render(request, 'pages/home.html', context)
 

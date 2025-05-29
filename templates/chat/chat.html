@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    {% include 'includes/sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <div class="container mx-auto px-6 py-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-900">Chat</h1>
+                    <button onclick="clearChat()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        Limpar Chat
+                    </button>
+                </div>
+
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div id="chat-messages" class="h-96 overflow-y-auto p-4 space-y-4">
+                        {% for chat in chats %}
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex justify-end">
+                                <div class="bg-indigo-100 rounded-lg py-2 px-4 max-w-3xl">
+                                    <p class="text-sm text-gray-900">{{ chat.message }}</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-start">
+                                <div class="bg-gray-100 rounded-lg py-2 px-4 max-w-3xl">
+                                    <p class="text-sm text-gray-900">{{ chat.response|urlize }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="border-t border-gray-200 p-4">
+                        <form id="chat-form" class="flex space-x-4">
+                            <input type="text" id="message-input" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Digite sua mensagem...">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Enviar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const messageInput = document.getElementById('message-input');
+
+    function addMessage(message, isUser = true) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex flex-col space-y-2';
+        
+        const messageContent = document.createElement('div');
+        messageContent.className = isUser ? 'flex justify-end' : 'flex justify-start';
+        
+        const messageBubble = document.createElement('div');
+        messageBubble.className = isUser ? 'bg-indigo-100 rounded-lg py-2 px-4 max-w-3xl' : 'bg-gray-100 rounded-lg py-2 px-4 max-w-3xl';
+        
+        const messageText = document.createElement('p');
+        messageText.className = 'text-sm text-gray-900';
+        
+        // Converte URLs em links clicáveis
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const linkedMessage = message.replace(urlRegex, url => {
+            return `<a href="${url}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">${url}</a>`;
+        });
+        
+        messageText.innerHTML = linkedMessage;
+        
+        messageBubble.appendChild(messageText);
+        messageContent.appendChild(messageBubble);
+        messageDiv.appendChild(messageContent);
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function clearChat() {
+        fetch('{% url "chat:clear_chat" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                chatMessages.innerHTML = '';
+            }
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const message = messageInput.value.trim();
+        if (!message) return;
+        
+        // Adiciona a mensagem do usuário
+        addMessage(message, true);
+        messageInput.value = '';
+        
+        // Envia a mensagem para o servidor
+        fetch('{% url "chat:process_message" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Adiciona a resposta do servidor
+            addMessage(data.response, false);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage('Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.', false);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %} 

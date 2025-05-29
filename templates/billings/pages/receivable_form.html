@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if billing %}Editar{% else %}Nova{% endif %} Conta a Receber{% endblock %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    {% include 'includes/sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <div class="container mx-auto px-6 py-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-900">{% if billing %}Editar{% else %}Nova{% endif %} Conta a Receber</h1>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label for="{{ form.client.id_for_label }}" class="block text-sm font-medium text-gray-700">Cliente</label>
+                                {{ form.client }}
+                                {% if form.client.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.client.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">Descrição</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.total_value.id_for_label }}" class="block text-sm font-medium text-gray-700">Valor Total</label>
+                                {{ form.total_value }}
+                                {% if form.total_value.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.total_value.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.installment_count.id_for_label }}" class="block text-sm font-medium text-gray-700">Número de Parcelas</label>
+                                {{ form.installment_count }}
+                                {% if form.installment_count.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.installment_count.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.due_date.id_for_label }}" class="block text-sm font-medium text-gray-700">Data de Vencimento</label>
+                                {{ form.due_date }}
+                                {% if form.due_date.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.due_date.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.installment_value.id_for_label }}" class="block text-sm font-medium text-gray-700">Valor das Parcelas</label>
+                                {{ form.installment_value }}
+                                {% if form.installment_value.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.installment_value.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex justify-end space-x-4">
+                            <a href="{% url 'billings:receivable_list' %}" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const totalValueInput = document.getElementById('{{ form.total_value.id_for_label }}');
+    const installmentCountInput = document.getElementById('{{ form.installment_count.id_for_label }}');
+    const installmentValueInput = document.createElement('input');
+    
+    installmentValueInput.type = 'text';
+    installmentValueInput.id = 'installment_value';
+    installmentValueInput.readOnly = true;
+    installmentValueInput.className = 'mt-1 block w-full rounded-md border border-gray-300 bg-gray-50 shadow-sm h-10 pl-5';
+    
+    const installmentValueDiv = document.createElement('div');
+    installmentValueDiv.innerHTML = `
+        <label for="installment_value" class="block text-sm font-medium text-gray-700">Valor das Parcelas</label>
+    `;
+    installmentValueDiv.appendChild(installmentValueInput);
+    
+    const formGrid = document.querySelector('.grid');
+    formGrid.insertBefore(installmentValueDiv, formGrid.children[4]);
+
+    function calculateInstallmentValue() {
+        const totalValue = parseFloat(totalValueInput.value) || 0;
+        const installmentCount = parseInt(installmentCountInput.value) || 0;
+        
+        if (installmentCount > 0) {
+            const installmentValue = totalValue / installmentCount;
+            installmentValueInput.value = installmentValue.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+        } else {
+            installmentValueInput.value = '';
+        }
+    }
+
+    totalValueInput.addEventListener('input', calculateInstallmentValue);
+    installmentCountInput.addEventListener('input', calculateInstallmentValue);
+    
+    // Calculate initial value if form is being edited
+    if (totalValueInput.value && installmentCountInput.value) {
+        calculateInstallmentValue();
+    }
+});
+</script>
+{% endblock %} 

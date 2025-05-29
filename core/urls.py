@@ -30,4 +30,6 @@ urlpatterns = [
     # path('plan/', include('apps.plan.urls')),
     path('tasks/', include('apps.tasks.urls')),
     path('chat/', include('apps.chat.urls')),
+    path('suppliers/', include('apps.suppliers.urls')),
+    path('billings/', include('apps.billings.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

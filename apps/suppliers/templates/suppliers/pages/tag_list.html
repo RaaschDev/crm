@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Clientes - ProCRM{% endblock %}
+{% block title %}Tags - ProCRM{% endblock %}
 
 {% block content %}
 <div class="flex h-screen bg-gray-100">
@@ -13,66 +13,40 @@
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                     <!-- Header -->
                     <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-semibold text-gray-900">Clientes</h1>
-                        <a href="{% url 'clients:create' %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+                        <h1 class="text-2xl font-semibold text-gray-900">Tags</h1>
+                        <a href="{% url 'suppliers:tag_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
                             <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                             </svg>
-                            Novo Cliente
+                            Nova Tag
                         </a>
                     </div>
 
-                    <!-- Tag Filters -->
-                    <div class="mb-6">
-                        <h2 class="text-sm font-medium text-gray-700 mb-2">Filtrar por Tags</h2>
-                        <form id="tag-filter-form" method="GET" class="flex flex-wrap gap-2">
-                            {% for tag in tags %}
-                            <label class="tag-filter-label cursor-pointer px-3 py-1 rounded-full text-sm font-medium border transition"
-                                style="background-color: {{ tag.color }}; color: #fff; opacity: {% if tag.id in selected_tags %}1{% else %}0.5{% endif %}; border: 2px solid {{ tag.color }};">
-                                <input type="checkbox" name="tags" value="{{ tag.id }}" class="hidden"
-                                    {% if tag.id in selected_tags %}checked{% endif %}>
-                                {{ tag.name }}
-                            </label>
-                            {% endfor %}
-                        </form>
-                    </div>
-
-                    <!-- Client List -->
+                    <!-- Tag List -->
                     <div class="bg-white shadow overflow-hidden sm:rounded-md">
                         <ul class="divide-y divide-gray-200">
-                            {% for client in clients %}
+                            {% for tag in tags %}
                             <li>
                                 <div class="px-4 py-4 sm:px-6">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0">
-                                                <img class="h-12 w-12 rounded-full" src="https://ui-avatars.com/api/?name={{ client.name }}&background=1E40AF&color=fff" alt="{{ client.name }}">
+                                                <span class="w-8 h-8 rounded-full" style="background-color: {{ tag.color }}"></span>
                                             </div>
                                             <div class="ml-4">
-                                                <h2 class="text-lg font-medium text-gray-900">{{ client.name }}</h2>
-                                                <div class="mt-1 flex items-center text-sm text-gray-500">
-                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                    </svg>
-                                                    {{ client.email }}
-                                                </div>
-                                                {% if client.tags.all %}
-                                                <div class="mt-2 flex flex-wrap gap-1">
-                                                    {% for tag in client.tags.all %}
-                                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                                                        style="background-color: {{ tag.color }}; color: #fff;">
-                                                        {{ tag.name }}
-                                                    </span>
-                                                    {% endfor %}
+                                                <h2 class="text-lg font-medium text-gray-900">{{ tag.name }}</h2>
+                                                {% if tag.description %}
+                                                <div class="mt-1 text-sm text-gray-500">
+                                                    {{ tag.description }}
                                                 </div>
                                                 {% endif %}
                                             </div>
                                         </div>
                                         <div class="flex space-x-2">
-                                            <a href="{% url 'clients:edit' client.id %}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
+                                            <a href="{% url 'suppliers:tag_edit' tag.id %}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-800">
                                                 Editar
                                             </a>
-                                            <button onclick="confirmDelete('{{ client.id }}')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                            <button onclick="confirmDelete('{{ tag.id }}')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                                 Excluir
                                             </button>
                                         </div>
@@ -81,7 +55,7 @@
                             </li>
                             {% empty %}
                             <li class="px-4 py-4 sm:px-6 text-center text-gray-500">
-                                Nenhum cliente encontrado
+                                Nenhuma tag encontrada
                             </li>
                             {% endfor %}
                         </ul>
@@ -107,11 +81,11 @@
                     </div>
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                            Excluir Cliente
+                            Excluir Tag
                         </h3>
                         <div class="mt-2">
                             <p class="text-sm text-gray-500">
-                                Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.
+                                Tem certeza que deseja excluir esta tag? Esta ação não pode ser desfeita.
                             </p>
                         </div>
                     </div>
@@ -134,10 +108,10 @@
 
 {% block extra_js %}
 <script>
-    function confirmDelete(clientId) {
+    function confirmDelete(tagId) {
         const modal = document.getElementById('deleteModal');
         const form = document.getElementById('deleteForm');
-        form.action = `/clients/${clientId}/delete/`;
+        form.action = `/suppliers/tags/${tagId}/delete/`;
         modal.classList.remove('hidden');
     }
 
@@ -145,21 +119,6 @@
         const modal = document.getElementById('deleteModal');
         modal.classList.add('hidden');
     }
-
-    // Tag filter functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const tagLabels = document.querySelectorAll('.tag-filter-label');
-        const form = document.getElementById('tag-filter-form');
-
-        tagLabels.forEach(label => {
-            label.addEventListener('click', function() {
-                const checkbox = this.querySelector('input[type="checkbox"]');
-                checkbox.checked = !checkbox.checked;
-                this.style.opacity = checkbox.checked ? '1' : '0.5';
-                form.submit();
-            });
-        });
-    });
 </script>
 {% endblock %}
 {% endblock %} 

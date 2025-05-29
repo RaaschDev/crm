@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    {% include 'includes/sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <div class="container mx-auto px-6 py-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold text-gray-900">{{ title }}</h1>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="mb-6">
+                        <h2 class="text-lg font-medium text-gray-900">Detalhes da Conta</h2>
+                        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Descrição</p>
+                                <p class="mt-1 text-sm text-gray-900">{{ billing.description }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Valor Total</p>
+                                <p class="mt-1 text-sm text-gray-900">R$ {{ billing.total_value }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Valor Pendente</p>
+                                <p class="mt-1 text-sm text-gray-900">R$ {{ billing.pending_value }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Valor Liquidado</p>
+                                <p class="mt-1 text-sm text-gray-900">R$ {{ billing.settled_value }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label for="{{ form.value.id_for_label }}" class="block text-sm font-medium text-gray-700">Valor da Liquidação</label>
+                                {{ form.value }}
+                                {% if form.value.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.value.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.date.id_for_label }}" class="block text-sm font-medium text-gray-700">Data da Liquidação</label>
+                                {{ form.date }}
+                                {% if form.date.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.date.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex justify-end space-x-4">
+                            <a href="{% if billing.billingpayable %}billings:payable_list{% else %}billings:receivable_list{% endif %}" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Liquidar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %} 

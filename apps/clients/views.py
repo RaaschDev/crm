@@ -8,8 +8,28 @@ from .models import Client, ClientTag
 
 @login_required
 def client_list(request):
-    clients = Client.objects.filter(enterprise=request.user.enterprise).order_by('name')
-    return render(request, 'pages/list.html', {'clients': clients})
+    # Get all active tags for the filter
+    tags = ClientTag.objects.filter(enterprise=request.user.enterprise, is_active=True).order_by('name')
+    
+    # Get selected tag IDs from query parameters
+    selected_tags = request.GET.getlist('tags')
+    
+    # Start with base queryset
+    clients = Client.objects.filter(enterprise=request.user.enterprise)
+    
+    # Apply tag filter if any tags are selected
+    if selected_tags:
+        clients = clients.filter(tags__id__in=selected_tags).distinct()
+    
+    # Order by name
+    clients = clients.order_by('name')
+    
+    context = {
+        'clients': clients,
+        'tags': tags,
+        'selected_tags': [int(tag_id) for tag_id in selected_tags if tag_id.isdigit()]
+    }
+    return render(request, 'pages/list.html', context)
 
 @login_required
 def client_create(request):
@@ -20,7 +40,7 @@ def client_create(request):
         company = request.POST.get('company')
         notes = request.POST.get('notes')
         address = request.POST.get('address')
-        tags = request.POST.getlist('tags')
+        selected_tags = request.POST.getlist('tags')  # Get all selected tags
 
         client = Client.objects.create(
             name=name,
@@ -32,8 +52,9 @@ def client_create(request):
             enterprise=request.user.enterprise
         )
         
-        if tags:
-            client.tags.set(tags)
+        # Add all selected tags to the client
+        if selected_tags:
+            client.tags.set(selected_tags)
             
         messages.success(request, 'Cliente criado com sucesso!')
         return redirect('clients:list')
@@ -54,8 +75,9 @@ def client_edit(request, pk):
         client.address = request.POST.get('address')
         client.save()
 
-        tags = request.POST.getlist('tags')
-        client.tags.set(tags)
+        # Update tags
+        selected_tags = request.POST.getlist('tags')
+        client.tags.set(selected_tags)  # This will replace all existing tags with the new selection
 
         messages.success(request, 'Cliente atualizado com sucesso!')
         return redirect('clients:list')
@@ -145,3 +167,39 @@ def tag_delete(request, pk):
         return redirect('clients:tag_list')
 
     return redirect('clients:tag_list')
+
+@login_required
+def search_clients_by_tags(request):
+    """
+    Search clients by tags and return a JSON response with client information.
+    """
+    # Get tag names from query parameters
+    tag_names = request.GET.getlist('tag_names', [])
+    
+    # Start with base queryset
+    clients = Client.objects.filter(enterprise=request.user.enterprise)
+    
+    # Apply tag filter if any tags are provided
+    if tag_names:
+        clients = clients.filter(tags__name__in=tag_names).distinct()
+    
+    # Order by name
+    clients = clients.order_by('name')
+    
+    # Prepare client data for response
+    client_data = []
+    for client in clients:
+        client_data.append({
+            'id': client.id,
+            'name': client.name,
+            'email': client.email,
+            'phone': client.phone,
+            'company': client.company,
+            'address': client.address,
+            'tags': [{'name': tag.name, 'color': tag.color} for tag in client.tags.all()]
+        })
+    
+    return JsonResponse({
+        'success': True,
+        'clients': client_data
+    })
