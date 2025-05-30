@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'apps.chat',
     'apps.suppliers',
     'apps.billings',
+    'apps.appointment',
 ]
 
 MIDDLEWARE = [

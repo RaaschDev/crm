@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-900">
+    <!-- Sidebar -->
+    {% include 'includes/sidebar.html' %}
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-auto">
+        <div class="h-full flex flex-col">
+            <div class="px-4 sm:px-6 md:px-8 py-4">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-semibold text-white">Agenda de Consultas</h1>
+                    <button id="createEventBtn" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Novo Agendamento
+                    </button>
+                </div>
+            </div>
+            <div class="flex-1 px-4 sm:px-6 md:px-8 pb-4">
+                <div class="bg-gray-800 rounded-lg shadow-lg h-full">
+                    <div id='calendar' class="bg-white rounded-lg h-full"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para criar/editar evento -->
+<div id="eventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="relative bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-white" id="modalTitle">Novo Agendamento</h3>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-300">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <form id="eventForm" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="date" id="eventDate">
+                    <input type="hidden" name="event_id" id="eventId">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="name">
+                            Nome
+                        </label>
+                        <input type="text" name="name" id="name" required
+                               class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="email">
+                            Email
+                        </label>
+                        <input type="email" name="email" id="email" required
+                               class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="phone">
+                            Telefone
+                        </label>
+                        <input type="tel" name="phone" id="phone" required
+                               class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="start_time">
+                            Horário de Início
+                        </label>
+                        <input type="time" name="start_time" id="start_time" required
+                               class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="end_time">
+                            Horário de Término
+                        </label>
+                        <input type="time" name="end_time" id="end_time" required
+                               class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="message">
+                            Mensagem
+                        </label>
+                        <textarea name="message" id="message" rows="3"
+                                  class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"></textarea>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeModal()"
+                                class="px-4 py-2 bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="submitBtn"
+                                class="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                            Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para visualizar detalhes do evento -->
+<div id="eventDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="relative bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-white">Detalhes do Agendamento</h3>
+                    <button onclick="closeDetailsModal()" class="text-gray-400 hover:text-gray-300">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="space-y-3 text-gray-300">
+                    <p><strong class="text-white">Nome:</strong> <span id="detailName"></span></p>
+                    <p><strong class="text-white">Email:</strong> <span id="detailEmail"></span></p>
+                    <p><strong class="text-white">Telefone:</strong> <span id="detailPhone"></span></p>
+                    <p><strong class="text-white">Data:</strong> <span id="detailDate"></span></p>
+                    <p><strong class="text-white">Horário:</strong> <span id="detailTime"></span></p>
+                    <p><strong class="text-white">Status:</strong> <span id="detailStatus"></span></p>
+                    <p><strong class="text-white">Mensagem:</strong> <span id="detailMessage"></span></p>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button onclick="closeDetailsModal()"
+                            class="px-4 py-2 bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- FullCalendar CSS & JS -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script>
+let calendar;
+
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        locale: 'pt-br',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        slotMinTime: '08:00:00',
+        slotMaxTime: '20:00:00',
+        allDaySlot: false,
+        slotDuration: '00:30:00',
+        events: '/appointments/',
+        eventClick: function(info) {
+            showEventDetails(info.event);
+        },
+        selectable: true,
+        select: function(info) {
+            showEventModal(info.startStr, info.endStr);
+        },
+        editable: true,
+        eventDrop: function(info) {
+            // Aqui você pode implementar a lógica para atualizar o evento no backend
+            console.log('Evento movido:', info.event);
+        },
+        eventResize: function(info) {
+            // Aqui você pode implementar a lógica para atualizar a duração do evento no backend
+            console.log('Evento redimensionado:', info.event);
+        },
+        // Customização do tema escuro
+        themeSystem: 'standard',
+        eventBackgroundColor: '#10B981',
+        eventBorderColor: '#059669',
+        eventTextColor: '#ffffff',
+        dayGridMonth: {
+            dayHeaderFormat: { weekday: 'long' }
+        },
+        buttonText: {
+            today: 'Hoje',
+            month: 'Mês',
+            week: 'Semana',
+            day: 'Dia'
+        },
+        // Configurações do tema claro
+        height: 'auto',
+        contentHeight: 'auto',
+        aspectRatio: 1.8,
+        // Estilização dos elementos do calendário
+        dayHeaderFormat: { weekday: 'long' },
+        dayMaxEvents: true,
+        // Cores dos elementos
+        eventColor: '#10B981',
+        eventTextColor: '#ffffff',
+        // Estilo dos botões
+        buttonIcons: {
+            prev: 'chevron-left',
+            next: 'chevron-right'
+        },
+        // Estilo dos cabeçalhos
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        // Estilo das células
+        dayCellClassNames: 'bg-white hover:bg-gray-50',
+        // Estilo dos eventos
+        eventClassNames: 'cursor-pointer hover:opacity-90',
+        // Estilo dos slots de tempo
+        slotLabelClassNames: 'text-gray-600',
+        // Estilo dos números dos dias
+        dayCellContent: function(e) {
+            e.dayNumberText = e.dayNumberText.replace(/^0+/, '');
+        }
+    });
+    calendar.render();
+
+    // Botão para criar novo evento
+    document.getElementById('createEventBtn').addEventListener('click', function() {
+        showEventModal();
+    });
+
+    // Form submission handler
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitButton = document.getElementById('submitBtn');
+        
+        // Desabilitar o botão durante o envio
+        submitButton.disabled = true;
+        submitButton.innerHTML = 'Salvando...';
+        
+        fetch('{% url "appointment:create_appointment" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Erro ao criar agendamento');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                // Adicionar o novo evento ao calendário
+                calendar.addEvent(data.appointment);
+                closeModal();
+                showNotification('success', data.message);
+                // Recarregar os eventos do calendário
+                calendar.refetchEvents();
+            } else {
+                showNotification('error', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('error', error.message || 'Erro ao criar agendamento. Tente novamente.');
+        })
+        .finally(() => {
+            // Reabilitar o botão
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Salvar';
+        });
+    });
+
+    // Validação do formulário
+    document.getElementById('eventForm').addEventListener('input', function(e) {
+        const startTime = document.getElementById('start_time').value;
+        const endTime = document.getElementById('end_time').value;
+        
+        if (startTime && endTime) {
+            const start = new Date(`2000-01-01T${startTime}`);
+            const end = new Date(`2000-01-01T${endTime}`);
+            
+            if (end <= start) {
+                document.getElementById('end_time').setCustomValidity('O horário de término deve ser posterior ao horário de início');
+            } else {
+                document.getElementById('end_time').setCustomValidity('');
+            }
+        }
+    });
+});
+
+function showEventModal(startStr = null, endStr = null) {
+    const modal = document.getElementById('eventModal');
+    const form = document.getElementById('eventForm');
+    const dateInput = document.getElementById('eventDate');
+    const startTimeInput = document.getElementById('start_time');
+    const endTimeInput = document.getElementById('end_time');
+
+    // Resetar o formulário
+    form.reset();
+    
+    if (startStr) {
+        const start = new Date(startStr);
+        dateInput.value = start.toISOString().split('T')[0];
+        startTimeInput.value = start.toTimeString().slice(0, 5);
+        
+        if (endStr) {
+            const end = new Date(endStr);
+            endTimeInput.value = end.toTimeString().slice(0, 5);
+        } else {
+            // Se não houver horário de término, definir 1 hora após o início
+            const end = new Date(start.getTime() + 60 * 60 * 1000);
+            endTimeInput.value = end.toTimeString().slice(0, 5);
+        }
+    }
+
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('eventModal').classList.add('hidden');
+    document.getElementById('eventForm').reset();
+}
+
+function showEventDetails(event) {
+    const modal = document.getElementById('eventDetailsModal');
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+    
+    document.getElementById('detailName').textContent = event.title;
+    document.getElementById('detailEmail').textContent = event.extendedProps.email;
+    document.getElementById('detailPhone').textContent = event.extendedProps.phone;
+    document.getElementById('detailDate').textContent = start.toLocaleDateString();
+    document.getElementById('detailTime').textContent = `${start.toLocaleTimeString()} - ${end.toLocaleTimeString()}`;
+    document.getElementById('detailStatus').textContent = event.extendedProps.status === 'confirmed' ? 'Confirmado' : 'Pendente';
+    document.getElementById('detailMessage').textContent = event.extendedProps.message || 'Nenhuma mensagem';
+    
+    modal.classList.remove('hidden');
+}
+
+function closeDetailsModal() {
+    document.getElementById('eventDetailsModal').classList.add('hidden');
+}
+
+function showNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
+    } text-white z-50`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Fechar modais ao clicar fora
+window.onclick = function(event) {
+    const eventModal = document.getElementById('eventModal');
+    const detailsModal = document.getElementById('eventDetailsModal');
+    
+    if (event.target == eventModal) {
+        closeModal();
+    }
+    if (event.target == detailsModal) {
+        closeDetailsModal();
+    }
+}
+</script>
+{% endblock %} 

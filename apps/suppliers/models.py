@@ -3,6 +3,7 @@ from utils.models.base_model import BaseModel
 from apps.enterprise.models import Enterprise
 
 class SupplierTag(BaseModel):
+    enterprise = models.ForeignKey(Enterprise, on_delete=models.CASCADE, verbose_name='Empresa')
     name = models.CharField(max_length=100, verbose_name='Nome')
     description = models.TextField(blank=True, null=True, verbose_name='Descrição')
     color = models.CharField(max_length=10, verbose_name='Cor')

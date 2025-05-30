@@ -8,7 +8,7 @@ from .models import Supplier, SupplierTag
 @login_required
 def supplier_list(request):
     suppliers = Supplier.objects.filter(enterprise=request.user.enterprise).order_by('name')
-    tags = SupplierTag.objects.filter(is_active=True).order_by('name')
+    tags = SupplierTag.objects.filter(is_active=True, enterprise=request.user.enterprise).order_by('name')
     
     # Filter by tags if selected
     selected_tags = request.GET.getlist('tags')
@@ -94,7 +94,7 @@ def supplier_delete(request, pk):
 # Tag Views
 @login_required
 def tag_list(request):
-    tags = SupplierTag.objects.filter(is_active=True).order_by('name')
+    tags = SupplierTag.objects.filter(is_active=True, enterprise=request.user.enterprise).order_by('name')
     return render(request, 'suppliers/pages/tag_list.html', {'tags': tags})
 
 @login_required

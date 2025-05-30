@@ -1,156 +1,228 @@
 {% extends 'base.html' %}
 
-{% block title %}CRM Multi-tenant - Gerencie suas empresas com eficiência{% endblock %}
+{% block title %}BusinessPro - Gestão Empresarial Completa{% endblock %}
 
 {% block content %}
     <!-- Navbar -->
-    <nav class="bg-white shadow-lg">
+    <nav class="bg-gray-900 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <span class="text-2xl font-bold text-indigo-600">CRM Pro</span>
+                    <span class="text-2xl font-bold text-emerald-500">BusinessPro</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="#" class="text-gray-600 hover:text-indigo-600">Recursos</a>
-                    <a href="#" class="text-gray-600 hover:text-indigo-600">Planos</a>
-                    <a href="#" class="text-gray-600 hover:text-indigo-600">Contato</a>
-                    <a href="{% url 'accounts:login' %}" class="text-gray-600 hover:text-indigo-600">Login</a>
-                    <a href="{% url 'accounts:register' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Começar Grátis</a>
+                    <a href="#features" class="text-gray-300 hover:text-emerald-500">Recursos</a>
+                    <a href="#testimonials" class="text-gray-300 hover:text-emerald-500">Depoimentos</a>
+                    <a href="#pricing" class="text-gray-300 hover:text-emerald-500">Preços</a>
+                    <a href="{% url 'accounts:login' %}" class="text-gray-300 hover:text-emerald-500">Login</a>
+                    <a href="{% url 'accounts:register' %}" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600">Começar Agora</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+    <div class="bg-gray-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div class="text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6">Gerencie Múltiplas Empresas com Facilidade</h1>
-                <p class="text-xl md:text-2xl mb-8">Solução completa de CRM para empresas que precisam gerenciar múltiplos negócios em uma única plataforma</p>
-                <a href="/register" class="bg-white text-indigo-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">
-                    Experimente Grátis por 14 Dias
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">Gestão Empresarial Simplificada</h1>
+                <p class="text-xl md:text-2xl mb-8 text-gray-300">Solução completa para gerenciar clientes, fornecedores, finanças e equipes em uma única plataforma</p>
+                <a href="{% url 'accounts:register' %}" class="bg-emerald-500 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-emerald-600 transition duration-300">
+                    Comece Agora
                 </a>
             </div>
         </div>
     </div>
 
     <!-- Features Section -->
-    <div class="py-20">
+    <div id="features" class="py-20 bg-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Recursos Poderosos</h2>
+            <h2 class="text-3xl font-bold text-center mb-12 text-white">Recursos Completos</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-indigo-600 text-3xl mb-4">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Multi-tenant</h3>
-                    <p class="text-gray-600">Gerencie múltiplas empresas em uma única plataforma, cada uma com seus próprios dados e configurações.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-indigo-600 text-3xl mb-4">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Análises Avançadas</h3>
-                    <p class="text-gray-600">Relatórios detalhados e dashboards personalizados para cada empresa.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-indigo-600 text-3xl mb-4">
+                <div class="bg-gray-900 p-6 rounded-lg shadow-md">
+                    <div class="text-emerald-500 text-3xl mb-4">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Gestão de Equipes</h3>
-                    <p class="text-gray-600">Controle de acesso granular e gestão de equipes para cada empresa.</p>
+                    <h3 class="text-xl font-semibold mb-2 text-white">Gestão de Clientes e Fornecedores</h3>
+                    <p class="text-gray-400">Cadastro completo de clientes e fornecedores com histórico de interações e documentos.</p>
+                </div>
+                <div class="bg-gray-900 p-6 rounded-lg shadow-md">
+                    <div class="text-emerald-500 text-3xl mb-4">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white">Contas a Pagar e Receber</h3>
+                    <p class="text-gray-400">Controle financeiro completo com fluxo de caixa, relatórios e previsões.</p>
+                </div>
+                <div class="bg-gray-900 p-6 rounded-lg shadow-md">
+                    <div class="text-emerald-500 text-3xl mb-4">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white">Gestão de Tarefas e Equipes</h3>
+                    <p class="text-gray-400">Organize projetos, tarefas e equipes com acompanhamento em tempo real.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Section -->
+    <div class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 text-white">Assistente IA Inteligente</h2>
+                    <p class="text-xl text-gray-300 mb-8">Tenha um oráculo empresarial à sua disposição 24/7, capaz de analisar e gerar insights valiosos sobre sua empresa.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-emerald-500 text-white">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-white">Relatórios Inteligentes</h3>
+                                <p class="mt-2 text-gray-400">Gere relatórios detalhados sobre clientes, funcionários e finanças com comandos simples em linguagem natural.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-emerald-500 text-white">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-white">Análise Preditiva</h3>
+                                <p class="mt-2 text-gray-400">Receba previsões e insights sobre tendências de vendas, comportamento de clientes e fluxo de caixa.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-emerald-500 text-white">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-white">Interface Conversacional</h3>
+                                <p class="mt-2 text-gray-400">Interaja com o sistema de forma natural, como se estivesse conversando com um consultor especializado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="bg-gray-800 rounded-lg p-6 shadow-xl">
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="h-8 w-8 rounded-full bg-emerald-500 flex items-center justify-center">
+                                        <i class="fas fa-robot text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1 bg-gray-700 rounded-lg p-4">
+                                    <p class="text-gray-300">Olá! Como posso ajudar você hoje? Posso gerar relatórios, analisar dados ou responder perguntas sobre sua empresa.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1 bg-emerald-500 rounded-lg p-4">
+                                    <p class="text-white">Gere um relatório dos 5 clientes com maior faturamento no último trimestre.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="h-8 w-8 rounded-full bg-emerald-500 flex items-center justify-center">
+                                        <i class="fas fa-robot text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1 bg-gray-700 rounded-lg p-4">
+                                    <p class="text-gray-300">Aqui está o relatório solicitado. Os 5 principais clientes geraram R$ 450.000 em faturamento, representando 35% do total...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-emerald-500 rounded-lg p-4 shadow-lg">
+                        <p class="text-white font-semibold">Disponível 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <div id="testimonials" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12 text-white">O que nossos clientes dizem</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="text-emerald-500 text-2xl mr-2">★★★★★</div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"O BusinessPro revolucionou nossa gestão. Agora temos controle total sobre nossas finanças e equipes."</p>
+                    <div class="text-white font-semibold">Ana Silva</div>
+                    <div class="text-gray-400">CEO, Tech Solutions</div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="text-emerald-500 text-2xl mr-2">★★★★★</div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"A gestão de clientes e fornecedores ficou muito mais eficiente. Recomendo fortemente!"</p>
+                    <div class="text-white font-semibold">Carlos Mendes</div>
+                    <div class="text-gray-400">Diretor, Mendes & Cia</div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="text-emerald-500 text-2xl mr-2">★★★★★</div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"O suporte é excelente e a plataforma é intuitiva. Melhor investimento que fizemos."</p>
+                    <div class="text-white font-semibold">Mariana Costa</div>
+                    <div class="text-gray-400">Gerente, Costa Consultoria</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Pricing Section -->
-    <div class="bg-gray-100 py-20">
+    <div id="pricing" class="bg-gray-800 py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Planos que Cabem no seu Bolso</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Plano Básico -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Básico</h3>
-                        <p class="text-4xl font-bold text-indigo-600 mb-6">R$ 99<span class="text-lg text-gray-500">/mês</span></p>
-                        <ul class="space-y-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-white">Plano Único, Benefícios Completos</h2>
+            <div class="max-w-lg mx-auto">
+                <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-white mb-4">Plano BusinessPro</h3>
+                        <p class="text-4xl font-bold text-emerald-500 mb-6">R$ 59,90<span class="text-lg text-gray-400">/mês</span></p>
+                        <ul class="space-y-4 text-gray-300">
                             <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Até 3 empresas
+                                <i class="fas fa-check text-emerald-500 mr-2"></i>
+                                Gestão de Clientes e Fornecedores
                             </li>
                             <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                5 usuários por empresa
+                                <i class="fas fa-check text-emerald-500 mr-2"></i>
+                                Contas a Pagar e Receber
                             </li>
                             <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Relatórios básicos
+                                <i class="fas fa-check text-emerald-500 mr-2"></i>
+                                Gestão de Departamentos
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-emerald-500 mr-2"></i>
+                                Gestão de Funcionários
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-emerald-500 mr-2"></i>
+                                Gestão de Tarefas
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-emerald-500 mr-2"></i>
+                                Suporte Prioritário
                             </li>
                         </ul>
-                        <a href="/register" class="mt-6 block w-full bg-indigo-600 text-white text-center py-2 rounded-md hover:bg-indigo-700 transition duration-300">
+                        <a href="{% url 'accounts:register' %}" class="mt-6 block w-full bg-emerald-500 text-white text-center py-3 rounded-md hover:bg-emerald-600 transition duration-300">
                             Começar Agora
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Plano Profissional -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform scale-105">
-                    <div class="bg-indigo-600 text-white text-center py-2">
-                        Mais Popular
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Profissional</h3>
-                        <p class="text-4xl font-bold text-indigo-600 mb-6">R$ 199<span class="text-lg text-gray-500">/mês</span></p>
-                        <ul class="space-y-4">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Até 10 empresas
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                15 usuários por empresa
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Relatórios avançados
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Suporte prioritário
-                            </li>
-                        </ul>
-                        <a href="/register" class="mt-6 block w-full bg-indigo-600 text-white text-center py-2 rounded-md hover:bg-indigo-700 transition duration-300">
-                            Começar Agora
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Plano Enterprise -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Enterprise</h3>
-                        <p class="text-4xl font-bold text-indigo-600 mb-6">R$ 499<span class="text-lg text-gray-500">/mês</span></p>
-                        <ul class="space-y-4">
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Empresas ilimitadas
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Usuários ilimitados
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                API personalizada
-                            </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check text-green-500 mr-2"></i>
-                                Gerente de conta dedicado
-                            </li>
-                        </ul>
-                        <a href="/register" class="mt-6 block w-full bg-indigo-600 text-white text-center py-2 rounded-md hover:bg-indigo-700 transition duration-300">
-                            Fale Conosco
                         </a>
                     </div>
                 </div>
@@ -159,51 +231,51 @@
     </div>
 
     <!-- CTA Section -->
-    <div class="bg-indigo-600 text-white py-20">
+    <div class="bg-gray-900 text-white py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl font-bold mb-8">Pronto para Transformar sua Gestão?</h2>
-            <p class="text-xl mb-8">Junte-se a milhares de empresas que já estão usando nossa plataforma</p>
-            <a href="/register" class="bg-white text-indigo-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">
-                Comece Agora - 14 Dias Grátis
+            <p class="text-xl mb-8 text-gray-300">Junte-se a centenas de empresas que já estão usando nossa plataforma</p>
+            <a href="{% url 'accounts:register' %}" class="bg-emerald-500 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-emerald-600 transition duration-300">
+                Comece Agora
             </a>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
+    <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">CRM Pro</h3>
-                    <p class="text-gray-400">Solução completa para gestão de múltiplas empresas</p>
+                    <h3 class="text-xl font-bold mb-4 text-emerald-500">BusinessPro</h3>
+                    <p class="text-gray-400">Solução completa para gestão empresarial</p>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Produto</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Recursos</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Planos</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Preços</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-emerald-500">Recursos</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-emerald-500">Preços</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-emerald-500">Depoimentos</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Empresa</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Sobre</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Contato</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-500">Sobre</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-500">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-500">Contato</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Legal</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Termos</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Privacidade</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Cookies</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-500">Termos</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-500">Privacidade</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-500">Cookies</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2024 CRM Pro. Todos os direitos reservados.</p>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 BusinessPro. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
