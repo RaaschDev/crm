@@ -49,7 +49,7 @@
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-300" for="name">
-                            Nome
+                            Nome do Cliente *
                         </label>
                         <input type="text" name="name" id="name" required
                                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
@@ -57,7 +57,7 @@
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-300" for="email">
-                            Email
+                            Email *
                         </label>
                         <input type="email" name="email" id="email" required
                                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
@@ -65,15 +65,29 @@
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-300" for="phone">
-                            Telefone
+                            Telefone *
                         </label>
                         <input type="tel" name="phone" id="phone" required
                                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="service">
+                            Serviço *
+                        </label>
+                        <select name="service" id="service" required
+                                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                            <option value="">Selecione um serviço</option>
+                            <option value="consultoria">Consultoria</option>
+                            <option value="mentoria">Mentoria</option>
+                            <option value="treinamento">Treinamento</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-300" for="start_time">
-                            Horário de Início
+                            Horário de Início *
                         </label>
                         <input type="time" name="start_time" id="start_time" required
                                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
@@ -81,18 +95,32 @@
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-300" for="end_time">
-                            Horário de Término
+                            Horário de Término *
                         </label>
                         <input type="time" name="end_time" id="end_time" required
                                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="status">
+                            Status *
+                        </label>
+                        <select name="status" id="status" required
+                                class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                            <option value="pending">Pendente</option>
+                            <option value="confirmed">Confirmado</option>
+                            <option value="cancelled">Cancelado</option>
+                            <option value="completed">Concluído</option>
+                        </select>
+                    </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-300" for="message">
-                            Mensagem
+                            Observações
                         </label>
                         <textarea name="message" id="message" rows="3"
-                                  class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"></textarea>
+                                  class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+                                  placeholder="Adicione observações sobre o agendamento..."></textarea>
                     </div>
                     
                     <div class="flex justify-end space-x-3 pt-4">
@@ -166,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
         slotMaxTime: '20:00:00',
         allDaySlot: false,
         slotDuration: '00:30:00',
-        events: '/appointments/',
+        events: '{% url "appointment:get_appointments" %}',
         eventClick: function(info) {
             showEventDetails(info.event);
         },
@@ -188,45 +216,11 @@ document.addEventListener('DOMContentLoaded', function() {
         eventBackgroundColor: '#10B981',
         eventBorderColor: '#059669',
         eventTextColor: '#ffffff',
-        dayGridMonth: {
-            dayHeaderFormat: { weekday: 'long' }
-        },
         buttonText: {
             today: 'Hoje',
             month: 'Mês',
             week: 'Semana',
             day: 'Dia'
-        },
-        // Configurações do tema claro
-        height: 'auto',
-        contentHeight: 'auto',
-        aspectRatio: 1.8,
-        // Estilização dos elementos do calendário
-        dayHeaderFormat: { weekday: 'long' },
-        dayMaxEvents: true,
-        // Cores dos elementos
-        eventColor: '#10B981',
-        eventTextColor: '#ffffff',
-        // Estilo dos botões
-        buttonIcons: {
-            prev: 'chevron-left',
-            next: 'chevron-right'
-        },
-        // Estilo dos cabeçalhos
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        // Estilo das células
-        dayCellClassNames: 'bg-white hover:bg-gray-50',
-        // Estilo dos eventos
-        eventClassNames: 'cursor-pointer hover:opacity-90',
-        // Estilo dos slots de tempo
-        slotLabelClassNames: 'text-gray-600',
-        // Estilo dos números dos dias
-        dayCellContent: function(e) {
-            e.dayNumberText = e.dayNumberText.replace(/^0+/, '');
         }
     });
     calendar.render();
@@ -243,14 +237,83 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(this);
         const submitButton = document.getElementById('submitBtn');
         
+        // Log para debug
+        console.log('Form Data:');
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        
+        // Validar campos obrigatórios
+        const requiredFields = {
+            'name': 'Nome do Cliente',
+            'email': 'Email',
+            'phone': 'Telefone',
+            'service': 'Serviço',
+            'start_time': 'Horário de Início',
+            'end_time': 'Horário de Término',
+            'status': 'Status',
+            'date': 'Data'
+        };
+        
+        const missingFields = [];
+        
+        for (const [field, label] of Object.entries(requiredFields)) {
+            const value = formData.get(field);
+            console.log(`Checking field ${field}:`, value); // Log para debug
+            if (!value || value.trim() === '') {
+                missingFields.push(label);
+            }
+        }
+        
+        if (missingFields.length > 0) {
+            showNotification('error', 'Por favor, preencha os seguintes campos obrigatórios: ' + missingFields.join(', '));
+            return;
+        }
+
+        // Validar horários
+        const startTime = formData.get('start_time');
+        const endTime = formData.get('end_time');
+        
+        if (startTime && endTime) {
+            const start = new Date(`2000-01-01T${startTime}`);
+            const end = new Date(`2000-01-01T${endTime}`);
+            
+            if (end <= start) {
+                showNotification('error', 'O horário de término deve ser posterior ao horário de início');
+                return;
+            }
+        }
+        
         // Desabilitar o botão durante o envio
         submitButton.disabled = true;
         submitButton.innerHTML = 'Salvando...';
         
+        // Adicionar a data ao formData se não estiver presente
+        if (!formData.get('date')) {
+            const today = new Date();
+            formData.set('date', today.toISOString().split('T')[0]);
+        }
+
+        // Converter os dados do formulário para JSON
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            service: formData.get('service'),
+            date: formData.get('date'),
+            start_time: formData.get('start_time'),
+            end_time: formData.get('end_time'),
+            status: formData.get('status'),
+            message: formData.get('message') || ''
+        };
+        
+        console.log('Sending data:', data); // Log para debug
+        
         fetch('{% url "appointment:create_appointment" %}', {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(data),
             headers: {
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
             }
@@ -258,21 +321,22 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => {
             if (!response.ok) {
                 return response.json().then(data => {
+                    console.error('Server response:', data); // Log para debug
                     throw new Error(data.message || 'Erro ao criar agendamento');
                 });
             }
             return response.json();
         })
         .then(data => {
+            console.log('Success response:', data); // Log para debug
             if (data.status === 'success') {
-                // Adicionar o novo evento ao calendário
-                calendar.addEvent(data.appointment);
+                // Fechar o modal e mostrar mensagem de sucesso
                 closeModal();
-                showNotification('success', data.message);
+                showNotification('success', 'Agendamento criado com sucesso!');
                 // Recarregar os eventos do calendário
                 calendar.refetchEvents();
             } else {
-                showNotification('error', data.message);
+                showNotification('error', data.message || 'Erro ao criar agendamento');
             }
         })
         .catch(error => {
@@ -286,11 +350,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Validação do formulário
+    // Validação do formulário em tempo real
     document.getElementById('eventForm').addEventListener('input', function(e) {
         const startTime = document.getElementById('start_time').value;
         const endTime = document.getElementById('end_time').value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const service = document.getElementById('service').value;
+        const status = document.getElementById('status').value;
         
+        console.log('Form values:', { // Log para debug
+            name,
+            email,
+            phone,
+            service,
+            startTime,
+            endTime,
+            status
+        });
+        
+        // Validar horários
         if (startTime && endTime) {
             const start = new Date(`2000-01-01T${startTime}`);
             const end = new Date(`2000-01-01T${endTime}`);
@@ -300,6 +380,41 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 document.getElementById('end_time').setCustomValidity('');
             }
+        }
+
+        // Validar email
+        if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            document.getElementById('email').setCustomValidity('Por favor, insira um email válido');
+        } else {
+            document.getElementById('email').setCustomValidity('');
+        }
+
+        // Validar telefone
+        if (phone && !phone.match(/^[0-9\s()-]{8,}$/)) {
+            document.getElementById('phone').setCustomValidity('Por favor, insira um telefone válido');
+        } else {
+            document.getElementById('phone').setCustomValidity('');
+        }
+
+        // Validar nome
+        if (name && name.length < 3) {
+            document.getElementById('name').setCustomValidity('O nome deve ter pelo menos 3 caracteres');
+        } else {
+            document.getElementById('name').setCustomValidity('');
+        }
+
+        // Validar serviço
+        if (service === '') {
+            document.getElementById('service').setCustomValidity('Por favor, selecione um serviço');
+        } else {
+            document.getElementById('service').setCustomValidity('');
+        }
+
+        // Validar status
+        if (status === '') {
+            document.getElementById('status').setCustomValidity('Por favor, selecione um status');
+        } else {
+            document.getElementById('status').setCustomValidity('');
         }
     });
 });
@@ -327,6 +442,10 @@ function showEventModal(startStr = null, endStr = null) {
             const end = new Date(start.getTime() + 60 * 60 * 1000);
             endTimeInput.value = end.toTimeString().slice(0, 5);
         }
+    } else {
+        // Se não houver data selecionada, usar a data atual
+        const today = new Date();
+        dateInput.value = today.toISOString().split('T')[0];
     }
 
     modal.classList.remove('hidden');

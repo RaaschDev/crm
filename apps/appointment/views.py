@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Appointment, AppointmentStatus
 from datetime import datetime, timedelta
 import calendar
+import json
 
 def fullcalendar_view(request):
     return render(request, 'appointment/fullcalendar.html')
@@ -17,20 +18,21 @@ def get_appointments(request):
     end = request.GET.get('end')
     
     try:
-        start_date = datetime.fromisoformat(start.replace('Z', '+00:00'))
-        end_date = datetime.fromisoformat(end.replace('Z', '+00:00'))
+        # Converter as datas para o formato correto
+        start_date = datetime.fromisoformat(start.replace('Z', '+00:00')).date()
+        end_date = datetime.fromisoformat(end.replace('Z', '+00:00')).date()
     except (ValueError, AttributeError):
         # Se não houver datas específicas, retorna eventos do mês atual
         today = timezone.now()
-        start_date = today.replace(day=1)
+        start_date = today.replace(day=1).date()
         if today.month == 12:
-            end_date = today.replace(year=today.year + 1, month=1, day=1) - timedelta(days=1)
+            end_date = today.replace(year=today.year + 1, month=1, day=1).date() - timedelta(days=1)
         else:
-            end_date = today.replace(month=today.month + 1, day=1) - timedelta(days=1)
+            end_date = today.replace(month=today.month + 1, day=1).date() - timedelta(days=1)
 
     # Buscar agendamentos no período
     appointments = Appointment.objects.filter(
-        date__range=[start_date.date(), end_date.date()],
+        date__range=[start_date, end_date],
         status__in=[AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED]
     )
 
@@ -115,14 +117,17 @@ def calendar_view(request):
 @require_http_methods(["POST"])
 def create_appointment(request):
     try:
+        # Parse JSON data from request body
+        data = json.loads(request.body)
+        
         # Obter e validar os dados do formulário
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        date_str = request.POST.get('date')
-        start_time_str = request.POST.get('start_time')
-        end_time_str = request.POST.get('end_time')
-        message = request.POST.get('message', '')
+        name = data.get('name')
+        email = data.get('email')
+        phone = data.get('phone')
+        date_str = data.get('date')
+        start_time_str = data.get('start_time')
+        end_time_str = data.get('end_time')
+        message = data.get('message', '')
 
         if not all([name, email, phone, date_str, start_time_str, end_time_str]):
             return JsonResponse({
@@ -174,21 +179,24 @@ def create_appointment(request):
             'message': 'Agendamento criado com sucesso!',
             'appointment': {
                 'id': str(appointment.id),
-                'title': f"{appointment.name} - {appointment.start_time.strftime('%H:%M')}",
-                'start': start_datetime.isoformat(),
-                'end': end_datetime.isoformat(),
-                'color': '#F59E0B',  # Cor para eventos pendentes
-                'extendedProps': {
-                    'email': appointment.email,
-                    'phone': appointment.phone,
-                    'message': appointment.message,
-                    'status': appointment.status
-                }
+                'name': appointment.name,
+                'date': appointment.date.strftime('%Y-%m-%d'),
+                'start_time': appointment.start_time.strftime('%H:%M'),
+                'end_time': appointment.end_time.strftime('%H:%M'),
+                'email': appointment.email,
+                'phone': appointment.phone,
+                'message': appointment.message,
+                'status': appointment.status
             }
         }
 
         return JsonResponse(response_data)
 
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Dados inválidos. Por favor, envie os dados em formato JSON.'
+        }, status=400)
     except Exception as e:
         return JsonResponse({
             'status': 'error',
